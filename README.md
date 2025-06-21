@@ -68,7 +68,20 @@ npm install
 
 You need 3 terminals (or terminal tabs) open to run all parts simultaneously:
 
+1st Terminal
 ```Bash
 cd backend
 npm run server
+```
+
+2nd Terminal
+```bash
+cd frontend
+npm run dev
+```
+
+3rd Terminal
+```bash
+cd admin
+npm run dev
 ```
