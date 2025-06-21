@@ -21,12 +21,7 @@ A full-featured Food Delivery Web Application built using the MERN stack, divide
 
 ## 📁 Folder Structure
 
-Food_Delivery_Website/
-│
-├── backend/ # Node.js + Express + MongoDB (API server)
-├── frontend/ # Customer UI (React)
-├── admin/ # Admin Dashboard (React)
-└── README.md
+Food_Delivery_Website/ │ ├── backend/ # Node.js + Express + MongoDB (API server) ├── frontend/ # Customer UI (React) ├── admin/ # Admin Dashboard (React) └── README.md
 
 
 ---
