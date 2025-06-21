@@ -63,7 +63,7 @@ npm install
 
 ```
 
-🚀 Running the Project
+## 🚀 Running the Project
 
 You need 3 terminals (or terminal tabs) open to run all parts simultaneously:
 
