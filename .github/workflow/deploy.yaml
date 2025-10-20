@@ -1,0 +1,59 @@
+name: Build and Deploy Food App to AKS
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  ACR_NAME: finalyrazure
+  RESOURCE_GROUP: Final_Year_Devops
+  CLUSTER_NAME: finalyrkube
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: 'Checkout Code'
+      uses: actions/checkout@v4
+
+    - name: 'Login to Azure'
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: 'Login to Azure Container Registry'
+      uses: azure/docker-login@v1
+      with:
+        login-server: ${{ env.ACR_NAME }}.azurecr.io
+        username: ${{ secrets.ACR_USERNAME }}
+        password: ${{ secrets.ACR_PASSWORD }}
+
+    - name: 'Build and Push Backend Image'
+      run: |
+        docker build ./backend -t ${{ env.ACR_NAME }}.azurecr.io/backend:${{ github.sha }}
+        docker push ${{ env.ACR_NAME }}.azurecr.io/backend:${{ github.sha }}
+
+    - name: 'Build and Push Frontend Image'
+      run: |
+        docker build ./frontend -t ${{ env.ACR_NAME }}.azurecr.io/frontend:${{ github.sha }}
+        docker push ${{ env.ACR_NAME }}.azurecr.io/frontend:${{ github.sha }}
+
+    - name: 'Build and Push Admin Image'
+      run: |
+        docker build ./admin -t ${{ env.ACR_NAME }}.azurecr.io/admin:${{ github.sha }}
+        docker push ${{ env.ACR_NAME }}.azurecr.io/admin:${{ github.sha }}
+        
+    - name: 'Set AKS context'
+      uses: azure/aks-set-context@v3
+      with:
+        resource-group: ${{ env.RESOURCE_GROUP }}
+        cluster-name: ${{ env.CLUSTER_NAME }}
+
+    - name: 'Deploy to Kubernetes'
+      run: |
+        kubectl apply -f k8s/
+        
+        kubectl set image deployment/backend-deployment backend-container=${{ env.ACR_NAME }}.azurecr.io/backend:${{ github.sha }}
+        kubectl set image deployment/frontend-deployment frontend-container=${{ env.ACR_NAME }}.azurecr.io/frontend:${{ github.sha }}
+        kubectl set image deployment/admin-deployment admin-container=${{ env.ACR_NAME }}.azurecr.io/admin:${{ github.sha }}
