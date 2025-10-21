@@ -2,15 +2,15 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: main-ingress
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /$2
+  #annotations:
+   # nginx.ingress.kubernetes.io/rewrite-target: /$2
 spec:
   ingressClassName: webapprouting.kubernetes.azure.com
   rules:
   - http:
       paths:
       # Rule for the Backend API
-      - path: /api(/|$)(.*)
+      - path: /api #(/|$)(.*)
         pathType: Prefix
         backend:
           service:
@@ -18,7 +18,7 @@ spec:
             port:
               number: 4000
       # Rule for the Admin Panel
-      - path: /admin(/|$)(.*)
+      - path: /admin #(/|$)(.*)
         pathType: Prefix
         backend:
           service:
@@ -26,7 +26,7 @@ spec:
             port:
               number: 80
       # Rule for the Frontend (must be last as a catch-all)
-      - path: /(/|$)(.*)
+      - path: / #(/|$)(.*)
         pathType: Prefix
         backend:
           service:
