@@ -23,7 +23,7 @@ kind: Service
 metadata:
   name: admin-service
 spec:
-  type: LoadBalancer
+  #type: LoadBalancer
   selector:
     app: admin
   ports:

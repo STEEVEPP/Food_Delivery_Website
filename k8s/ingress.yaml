@@ -3,14 +3,13 @@ kind: Ingress
 metadata:
   name: main-ingress
   annotations:
-    # This annotation is important for rewriting the URL path
     nginx.ingress.kubernetes.io/rewrite-target: /$2
 spec:
   ingressClassName: webapprouting.kubernetes.azure.com
   rules:
   - http:
       paths:
-      # Requests for the backend API
+      # Rule for the Backend API
       - path: /api(/|$)(.*)
         pathType: Prefix
         backend:
@@ -18,8 +17,16 @@ spec:
             name: backend-service
             port:
               number: 4000
-      # Requests for the frontend application
-      - path: /()(.*)
+      # Rule for the Admin Panel
+      - path: /admin(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: admin-service
+            port:
+              number: 80
+      # Rule for the Frontend (must be last as a catch-all)
+      - path: /(/|$)(.*)
         pathType: Prefix
         backend:
           service:
